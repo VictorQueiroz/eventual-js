@@ -15,6 +15,7 @@
   "main": "./src/index.js",
   "scripts": {
     "build": "npx tsc -b test src --force",
+    "prepublishOnly": "yarn run build",
     "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
     "pretest": "yarn run build",
     "coverage": "npx nyc yarn test"
