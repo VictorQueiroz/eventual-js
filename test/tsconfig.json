@@ -1,0 +1,8 @@
+{
+  "extends": "../tsconfig.base.json",
+  "include": ["EventEmitter.ts"],
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "references": [{ "path": "../src" }]
+}

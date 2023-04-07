@@ -1,0 +1,30 @@
+{
+  "devDependencies": {
+    "@istanbuljs/nyc-config-typescript": "1.x",
+    "@types/node": "18.x",
+    "@types/sinon": "10.x",
+    "eslint": "^8.37.0",
+    "nyc": "^15.1.0",
+    "prettier": "^2.8.7",
+    "sarg": "^5.0.12",
+    "ts-node": "^10.9.1",
+    "typescript": "5.x"
+  },
+  "version": "0.0.1",
+  "license": "MIT",
+  "main": "./src/index.js",
+  "scripts": {
+    "build": "npx tsc -b test src --force",
+    "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
+    "pretest": "yarn run build",
+    "coverage": "npx nyc yarn test"
+  },
+  "files": [
+    "src/**/*.{d.ts,map,js}",
+    "*.{js,d.ts,map}"
+  ],
+  "name": "eventual-js",
+  "dependencies": {
+    "sinon": "15.x"
+  }
+}
