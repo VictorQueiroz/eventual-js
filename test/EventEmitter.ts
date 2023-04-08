@@ -69,4 +69,30 @@ suite.test('it should wait promises returned by each listener', () => {
   e.emit('a', 2);
 });
 
+suite.test(
+  'it should work if the same reference is used when queueing event dispatches',
+  () => {
+    const obj = {};
+    const e = new EventEmitter<{ a: {} }>();
+    e.emit('a', obj);
+    e.emit('a', obj);
+    e.emit('a', obj);
+    e.emit('a', obj);
+    const fn = spy((_: {}) => {});
+    e.on('a', fn);
+    assert.strict.ok(fn.calledWithExactly(obj));
+    assert.strict.ok(fn.calledWithExactly(obj));
+    assert.strict.ok(fn.calledWithExactly(obj));
+    assert.strict.ok(fn.calledWithExactly(obj));
+  }
+);
+
+suite.test('it should attach two event listeners to the same event', () => {
+  const l1 = () => {};
+  const l2 = () => {};
+  const e = new EventEmitter<{ a: {} }>();
+  e.on('a', l1);
+  e.on('a', l2);
+});
+
 export default suite;

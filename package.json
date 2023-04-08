@@ -19,7 +19,7 @@
     "prepublishOnly": "yarn run build",
     "test": "npx sarg --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
     "pretest": "yarn run build",
-    "coverage": "npx nyc yarn test"
+    "coverage": "npx nyc --exclude \"**/*.js\" --exclude test yarn test"
   },
   "files": [
     "src/**/*.{d.ts,map,js}",
