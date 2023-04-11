@@ -12,7 +12,7 @@
     "ts-node": "^10.9.1",
     "typescript": "5.x"
   },
-  "version": "0.0.8",
+  "version": "0.0.9",
   "license": "MIT",
   "main": "./src/index.js",
   "scripts": {
