@@ -28,8 +28,11 @@ export default class EventEmitter<EventMap extends Record<string, unknown>> {
     this.#maxListenerWaitTime = maxListenerWaitTime;
     this.#queueIfNoEventListeners = queueIfNoEventListeners;
   }
-  public async wait() {
+  public async wait(eventNames: (keyof EventMap)[] = []) {
     for (const e of this.#events) {
+      if (eventNames.length > 0 && !eventNames.includes(e[0])) {
+        continue;
+      }
       await e[1].pending;
     }
   }
