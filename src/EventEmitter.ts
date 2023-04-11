@@ -28,6 +28,11 @@ export default class EventEmitter<EventMap extends Record<string, unknown>> {
     this.#maxListenerWaitTime = maxListenerWaitTime;
     this.#queueIfNoEventListeners = queueIfNoEventListeners;
   }
+  public async wait() {
+    for (const e of this.#events) {
+      await e[1].pending;
+    }
+  }
   public on<K extends keyof EventMap>(
     name: K,
     listener: (value: EventMap[K]) => void
@@ -54,34 +59,18 @@ export default class EventEmitter<EventMap extends Record<string, unknown>> {
       }
     }
     for (const l of e.listeners) {
-      let result: Promise<void> | void;
-      try {
-        result = l(value);
-      } catch (reason) {
-        console.error('synchronous function failed with exception: %o', reason);
-        continue;
-      }
-      if (typeof result === 'undefined') {
-        return;
-      }
-      const promise = result;
       /**
        * in case waitListenerPromise is disabled do not wait
        * for the promise returned by the listener. only check for uncaught
        * failures
        */
       if (!this.#waitListenerPromise) {
-        result.catch((reason) => {
-          console.error(
-            'promise returned by listener call failed with uncaught exception: %o',
-            reason
-          );
-        });
+        this.#callEventListener(l, value);
         continue;
       }
-      e.pending = Promise.resolve(e.pending)
-        .then(async () => {
-          await new Promise<void>((resolve) => {
+      e.pending = Promise.resolve(e.pending).then(
+        () =>
+          new Promise<void>((resolve) => {
             const timeoutId = setTimeout(() => {
               console.error(
                 'event listener took more than %d ms to be resolved: %o',
@@ -90,19 +79,30 @@ export default class EventEmitter<EventMap extends Record<string, unknown>> {
               );
               resolve();
             }, this.#maxListenerWaitTime);
-            promise.finally(() => {
-              clearTimeout(timeoutId);
-              resolve(result);
-            });
-          });
-        })
-        .catch((reason) => {
-          console.error(
-            'event listener returned a promise that was rejected with error: %o',
-            reason
-          );
-        });
+            this.#callEventListener(l, value)
+              .then(() => {})
+              .finally(() => {
+                clearTimeout(timeoutId);
+                resolve();
+              });
+          })
+      );
     }
+  }
+  async #callEventListener<T>(listener: (value: T) => void, value: T) {
+    let result: unknown;
+    try {
+      result = listener(value);
+    } catch (reason) {
+      console.error('event listener returned threw an exception: %o', reason);
+      result = null;
+    }
+    return Promise.resolve(result).catch((reason) => {
+      console.error(
+        'event listener returned a promise that was rejected with error: %o',
+        reason
+      );
+    });
   }
   #event(name: keyof EventMap) {
     let e = this.#events.get(name);
