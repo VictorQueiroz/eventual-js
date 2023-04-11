@@ -25,8 +25,7 @@
     "coverage": "npx nyc --exclude \"**/*.js\" --exclude test yarn test"
   },
   "files": [
-    "src/**/*.{d.ts,map,js}",
-    "*.{js,d.ts,map}"
+    "{es,src,.}/**/*.{d.ts,map,js}"
   ],
   "name": "eventual-js",
   "dependencies": {},
