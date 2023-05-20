@@ -1,5 +1,9 @@
 {
   "compileOnSave": true,
+  "exclude": [],
+  "ts-node": {
+    "preferTsExts": true
+  },
   "compilerOptions": {
     "lib": ["ESNext"],
     "types": [],

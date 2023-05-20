@@ -8,7 +8,7 @@
     "package-utilities": "0.x",
     "prettier": "^2.8.7",
     "sarg": "^5.0.12",
-    "sinon": "15.x",
+    "sinon": "^15.1.0",
     "ts-node": "^10.9.1",
     "typescript": "5.x"
   },
@@ -20,15 +20,16 @@
     "build:es": "npx tsc --project src --module ESNext --outDir es",
     "set-es-paths": "npx package-utilities --set-es-paths --include \"src/**/*.js\" --es-folder es",
     "prepublishOnly": "yarn run build && yarn run build:es && yarn run set-es-paths",
-    "test": "npx sarg --bail --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
-    "pretest": "yarn run build",
-    "coverage": "npx nyc --exclude \"**/*.js\" --exclude test yarn test"
+    "test": "TS_NODE_PROJECT=test/tsconfig.json npx sarg --bail --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
+    "coverage": "npx nyc yarn test"
   },
   "files": [
     "{es,src,.}/**/*.{d.ts,map,js}"
   ],
   "name": "eventual-js",
-  "dependencies": {},
+  "dependencies": {
+    "@jscriptlogger/lib": "0.x"
+  },
   "browser": {
     "./src/index.js": "./es/src/index.js",
     "./src/EventEmitter.js": "./es/src/EventEmitter.js"
