@@ -1,11 +1,12 @@
 {
   "devDependencies": {
     "@istanbuljs/nyc-config-typescript": "1.x",
+    "@jscriptlogger/lib": "0.0.16",
     "@types/node": "18.x",
     "@types/sinon": "10.x",
     "eslint": "^8.37.0",
     "nyc": "^15.1.0",
-    "package-utilities": "0.x",
+    "pkg-utilities": "0.1.1",
     "prettier": "^2.8.7",
     "sarg": "^5.0.12",
     "sinon": "^15.1.0",
@@ -18,18 +19,15 @@
   "scripts": {
     "build": "npx tsc -b test src --force",
     "build:es": "npx tsc --project src --module ESNext --outDir es",
-    "set-es-paths": "npx package-utilities --set-es-paths --include \"src/**/*.js\" --es-folder es",
-    "prepublishOnly": "yarn run build && yarn run build:es && yarn run set-es-paths",
+    "set-es-paths": "npx pkg-utilities --write --set-es-paths --include \"src/**/*.js\" --es-folder es",
+    "prepublishOnly": "npm run build && npm run build:es && npm run set-es-paths",
     "test": "TS_NODE_PROJECT=test/tsconfig.json npx sarg --bail --require ts-node/register \"test/**/*.ts\" --ignore \"test/**/*.d.ts\"",
-    "coverage": "npx nyc yarn test"
+    "coverage": "npx nyc npm test"
   },
   "files": [
     "{es,src,.}/**/*.{d.ts,map,js}"
   ],
   "name": "eventual-js",
-  "dependencies": {
-    "@jscriptlogger/lib": "0.x"
-  },
   "browser": {
     "./src/index.js": "./es/src/index.js",
     "./src/EventEmitter.js": "./es/src/EventEmitter.js"

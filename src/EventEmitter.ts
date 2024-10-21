@@ -1,5 +1,3 @@
-import { ILogger } from '@jscriptlogger/lib';
-
 type EventCallback =
   | ((value: unknown) => void)
   | ((value: unknown) => Promise<void>);
@@ -10,6 +8,12 @@ interface IEvent<T = unknown> {
   pending: Promise<void> | null;
 }
 
+export interface ILogger {
+  log: (...args: unknown[]) => void;
+  error: (...args: unknown[]) => void;
+  at: (name: string) => ILogger;
+}
+
 export interface IEventEmitterOptions {
   maxListenerWaitTime: number;
   waitListenerPromise: boolean;
@@ -17,7 +21,7 @@ export interface IEventEmitterOptions {
   logger: ILogger;
 }
 
-enum EventEmitterState {
+const enum EventEmitterState {
   Started,
   Stopped,
 }

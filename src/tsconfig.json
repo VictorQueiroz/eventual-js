@@ -2,7 +2,7 @@
   "extends": "../tsconfig.base.json",
   "compilerOptions": {
     "lib": ["ESNext", "DOM"],
-    "types": ["node"]
+    "target": "ES2016"
   },
   "include": ["EventEmitter.ts", "index.ts"]
 }
